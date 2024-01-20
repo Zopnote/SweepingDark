@@ -13,4 +13,7 @@ UCLASS()
 class SWEEPINGDARK_API ADarkGame : public AGameModeBase
 {
 	GENERATED_BODY()
+public:
+	ADarkGame();
+	virtual void BeginPlay() override;
 };
