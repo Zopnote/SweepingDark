@@ -29,7 +29,6 @@ ADarkPlayer::ADarkPlayer()
 	FollowCamera->bUsePawnControlRotation = false;
 	PlayerController->ActiveLocomotion = true;
 	
-	
 }
 
 void ADarkPlayer::Landed(const FHitResult& Hit)
@@ -60,11 +59,5 @@ void ADarkPlayer::Tick(const float DeltaSeconds)
 		}
 	}
 	Super::Tick(DeltaSeconds);
-}
-
-
-void ADarkPlayer::BeginPlay()
-{
-	Super::BeginPlay();
 }
 

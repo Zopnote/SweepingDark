@@ -48,11 +48,8 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-protected:
-	
 	UPROPERTY(EditAnywhere, DisplayName = "Attack Able", Category = "Menria|Character")
 	bool AttackAble;
 
-	virtual void BeginPlay() override;
 
 };
