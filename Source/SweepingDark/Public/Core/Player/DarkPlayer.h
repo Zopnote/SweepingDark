@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperZDCharacter.h"
+#include "Camera/DarkCamera.h"
 
 #include "DarkPlayer.generated.h"
 
@@ -12,29 +13,35 @@ UCLASS()
 class SWEEPINGDARK_API ADarkPlayer : public APaperZDCharacter
 {
 	GENERATED_BODY()
-
-	float WalkingSpeed = 350.0f;
-
-	float RunningSpeed = 700.0f;
 	
 	UPROPERTY(VisibleAnywhere, Category = Controller)
 	ADarkPlayerController* PlayerController;
 
-	
 public:
 	
 	ADarkPlayer();
+	
+	float WalkingSpeed = 350.0f;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Menria|Character|Player", DisplayName = "Directionality")
-	FVector2D Directionality;
+	float RunningSpeed = 700.0f;
+
+	UPROPERTY(VisibleAnywhere, DisplayName = "Camera Settings", Category = "Menria|Character|Player")
+	UDarkCamera* CameraSettings;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
-
+	
+	UFUNCTION(BlueprintCallable, DisplayName = "Get Controller", Category = "Menria|Character|Player")
+	ADarkPlayerController* GetDarkController() const;
+	
+	UFUNCTION(BlueprintNativeEvent, Category = "Dark|Character|Player", DisplayName = "When Falling")
+	void WhenFalling();
+	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
 	
 protected:
 	
