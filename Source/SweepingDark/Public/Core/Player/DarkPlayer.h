@@ -20,6 +20,10 @@ class SWEEPINGDARK_API ADarkPlayer : public APaperZDCharacter
 public:
 	
 	ADarkPlayer();
+
+	virtual void Landed(const FHitResult& Hit) override;
+	
+	bool Falling;
 	
 	float WalkingSpeed = 350.0f;
 
@@ -42,7 +46,8 @@ public:
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
-	
+	virtual void Tick(float DeltaSeconds) override;
+
 protected:
 	
 	UPROPERTY(EditAnywhere, DisplayName = "Attack Able", Category = "Menria|Character")

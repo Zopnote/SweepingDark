@@ -18,34 +18,10 @@ void ADarkPlayerController::SetDarkPlayer(ADarkPlayer* PlayerInstance)
 	DarkPlayer = PlayerInstance;
 }
 
-void ADarkPlayerController::BeginPlay()
-{
-	GroundedInitializable = true;
-	Grounded = true;
-}
 
 
-FVector2D ADarkPlayerController::GetDirectionality() const { return Directionality; }
 
-FVector2D ADarkPlayerController::SetDirectionality() const { return Directionality; }
 
-void ADarkPlayerController::Tick(const float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-	if (GroundedInitializable)
-	{
-		if (!Grounded)
-		{
-			if (Jumped)
-			{
-				return;
-			}
-			DarkPlayer->WhenFalling();
-			return;
-		}
-		Grounded = !DarkPlayer->GetCharacterMovement()->IsFalling();
-	}
-}
 void ADarkPlayerController::SetupInput(UInputComponent* PlayerInputComponent)
 {
 	try
@@ -91,6 +67,13 @@ void ADarkPlayerController::ReleaseD() { HoldingD = false; }
 
 
 
+FVector2D ADarkPlayerController::GetDirectionality() const
+{
+	
+	return Directionality;
+}
+
+FVector2D ADarkPlayerController::SetDirectionality() const { return Directionality; }
 
 	/*Check if the player moving against a wall etc.*/
 bool ADarkPlayerController::GetIsStuck() const { return DarkPlayer->GetVelocity().SizeSquared() < FMath::Square(10.0f) && GetIsHoldingMove() && !GetIsGhostHold(); }
@@ -108,20 +91,12 @@ bool ADarkPlayerController::GetIsGhostHold() const { return (HoldingA && Holding
 	
 void ADarkPlayerController::PressJump()
 {
-	Jumped = true;
 	DarkPlayer->Jump();
 }
 
 void ADarkPlayerController::ReleaseJump()
 {
 	DarkPlayer->StopJumping();
-}
-
-void ADarkPlayerController::Landed(const FHitResult& Hit)
-{
-	Grounded = true;
-	Jumped = false;
-	DarkPlayer->Landed(Hit);
 }
 
 void ADarkPlayerController::PressRun() 
@@ -175,6 +150,7 @@ void ADarkPlayerController::Right(const float AxisValue)
 
 void ADarkPlayerController::Pitch(const float AxisValue)
 {
+	
 	if (!ActiveLocomotion)
 	{
 		return;

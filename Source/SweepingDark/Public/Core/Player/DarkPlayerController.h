@@ -13,15 +13,12 @@ class SWEEPINGDARK_API ADarkPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaSeconds) override;
-	
-	virtual void Landed(const FHitResult& Hit);
 	
 	UPROPERTY(Transient)
 	ADarkPlayer* DarkPlayer;
 	
 public:
+	
 	ADarkPlayerController();
 
 	void SetDarkPlayer(ADarkPlayer* Player);
@@ -60,11 +57,6 @@ private:
 		
 	bool HoldingRun;
 
-	bool Grounded;
-
-	bool Jumped;
-	
-	bool GroundedInitializable;
 protected:
 	void PressJump();
 	void ReleaseJump();
