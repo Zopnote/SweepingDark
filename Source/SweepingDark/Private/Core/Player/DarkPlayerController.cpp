@@ -1,4 +1,5 @@
 ﻿
+// ReSharper disable CppMemberFunctionMayBeConst
 #include "SweepingDark/Public/Core/Player/DarkPlayerController.h"
 #include "Components/InputComponent.h"
 #include "Core/Player/DarkPlayer.h"
@@ -172,15 +173,23 @@ void ADarkPlayerController::Right(const float AxisValue)
 	}
 }
 
-void ADarkPlayerController::Pitch(float AxisValue)
+void ADarkPlayerController::Pitch(const float AxisValue)
 {
-	FRotator Old = DarkPlayer->CameraBoom->GetRelativeRotation();
+	if (!ActiveLocomotion)
+	{
+		return;
+	}
+	const FRotator Old = DarkPlayer->CameraBoom->GetRelativeRotation();
 	DarkPlayer->CameraBoom->SetRelativeRotation(FRotator(Old.Pitch+AxisValue, Old.Yaw, Old.Roll));
 	
 }
 
-void ADarkPlayerController::Yaw(float AxisValue)
+void ADarkPlayerController::Yaw(const float AxisValue)
 {
+	if (!ActiveLocomotion)
+	{
+		return;
+	}
 	DarkPlayer->AddControllerYawInput(AxisValue);
 }
 

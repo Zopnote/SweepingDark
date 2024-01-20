@@ -29,7 +29,4 @@ public:
 	UPROPERTY(VisibleAnywhere, DisplayName = "Distance To Player", Category = "Menria|Character|Player|Camera")
 	float DistanceToPlayer;
 
-	void ThirdPerson(ADarkPlayer* DarkPlayer);
-
-	void Isometric(ADarkPlayer* DarkPlayer);
 };

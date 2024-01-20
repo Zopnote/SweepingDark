@@ -48,7 +48,8 @@ public:
 	/*A Ghost hold appear when the player presses two buttons which equalize themself.*/
 	UFUNCTION(BlueprintCallable, Category = "Dark|Character|Player|Controller", DisplayName = "Get Is Ghost Hold")
 	bool GetIsGhostHold() const;
-	
+
+	bool ActiveLocomotion;
 
 private:
 	void Pitch(const float AxisValue);

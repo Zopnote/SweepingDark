@@ -2,11 +2,3 @@
 
 
 #include "Core/Player/Camera/DarkCamera.h"
-
-void UDarkCamera::ThirdPerson(ADarkPlayer* DarkPlayer)
-{
-}
-
-void UDarkCamera::Isometric(ADarkPlayer* DarkPlayer)
-{
-}
