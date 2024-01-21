@@ -11,8 +11,17 @@ class SWEEPINGDARK_API ADarkCharacter : public APaperZDCharacter
 {
 	GENERATED_BODY()
 
+protected:
+	float Health;
+	bool Death;
+	bool AbleDamage;
+	bool AbleDamageByFire;
+	bool AbleDamageByFalling;
+	bool AbleDamageByDropping; // Damage by objects which falling on the Character
+	bool AbleDamageByPlayer;
+	bool AbleDamageByHostile;
+	bool Nura;
 public:
-	// Sets default values for this character's properties
 	ADarkCharacter();
 
 protected:

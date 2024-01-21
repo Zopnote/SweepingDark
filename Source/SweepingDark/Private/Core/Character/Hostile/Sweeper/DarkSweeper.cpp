@@ -3,13 +3,37 @@
 
 #include "Core/Character/Hostile/Sweeper/DarkSweeper.h"
 
+#include "Components/CapsuleComponent.h"
+#include "Core/Character/Hostile/Sweeper/DarkSweeperController.h"
+
+
 
 // Sets default values
 ADarkSweeper::ADarkSweeper()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	AIControllerClass = ADarkSweeperController::StaticClass();
+	ColdPoint = CreateDefaultSubobject<USphereComponent>(TEXT("Cold Point Collision"));
+	ColdPoint->SetupAttachment(RootComponent);
+	ColdPoint->InitSphereRadius(86.0f);
+	ColdPoint->SetCollisionProfileName("OverlapAllDynamic");
+
+	HotPointLeft = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Hot Point Left Collision"));
+	HotPointLeft->SetupAttachment(RootComponent);
+	HotPointLeft->SetCapsuleHalfHeight(44.0f);
+	HotPointLeft->SetCapsuleRadius(22.0f);
+	HotPointLeft->SetRelativeLocation(FVector(-80, 18, -25));
+	HotPointLeft->SetRelativeRotation(FRotator(90, 0, 0));
+	
+	HotPointRight = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Hot Point Right Collision"));
+	HotPointRight->SetupAttachment(RootComponent);
+	HotPointRight->SetCapsuleHalfHeight(44.0f);
+	HotPointRight->SetCapsuleRadius(22.0f);
+	HotPointRight->SetRelativeLocation(FVector(80, 18, -25));
+	HotPointRight->SetRelativeRotation(FRotator(90, 0, 0));
 }
+	
+
 
 // Called when the game starts or when spawned
 void ADarkSweeper::BeginPlay()

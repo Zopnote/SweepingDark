@@ -4,13 +4,14 @@
 #include "CoreMinimal.h"
 #include "PaperZDCharacter.h"
 #include "Camera/DarkCamera.h"
+#include "Core/Character/DarkCharacter.h"
 
 #include "DarkPlayer.generated.h"
 
 class ADarkPlayerController;
 
 UCLASS()
-class SWEEPINGDARK_API ADarkPlayer : public APaperZDCharacter
+class SWEEPINGDARK_API ADarkPlayer : public ADarkCharacter
 {
 	GENERATED_BODY()
 	

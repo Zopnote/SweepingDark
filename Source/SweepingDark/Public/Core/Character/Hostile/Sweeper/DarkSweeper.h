@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/SphereComponent.h"
 #include "Core/Character/DarkCharacter.h"
 #include "DarkSweeper.generated.h"
 
@@ -11,6 +12,15 @@ class SWEEPINGDARK_API ADarkSweeper : public ADarkCharacter
 {
 	GENERATED_BODY()
 
+	UPROPERTY(VisibleAnywhere, DisplayName = "Cold Point Collision")
+	USphereComponent* ColdPoint;
+	UPROPERTY(VisibleAnywhere, DisplayName = "Hot Point Left Collision")
+	UCapsuleComponent* HotPointLeft;
+	UPROPERTY(VisibleAnywhere, DisplayName = "Hot Point Right Collision")
+	UCapsuleComponent* HotPointRight;
+
+	
+	
 public:
 	// Sets default values for this character's properties
 	ADarkSweeper();
