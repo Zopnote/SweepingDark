@@ -32,23 +32,17 @@ ADarkSweeper::ADarkSweeper()
 	HotPointRight->SetRelativeLocation(FVector(80, 18, -25));
 	HotPointRight->SetRelativeRotation(FRotator(90, 0, 0));
 }
-	
 
-
-// Called when the game starts or when spawned
 void ADarkSweeper::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
-// Called every frame
-void ADarkSweeper::Tick(float DeltaTime)
+void ADarkSweeper::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void ADarkSweeper::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

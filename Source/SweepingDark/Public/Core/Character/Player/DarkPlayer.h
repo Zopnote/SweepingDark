@@ -42,7 +42,7 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName = "Get Controller", Category = "Menria|Character|Player")
 	ADarkPlayerController* GetDarkController() const;
 	
-	UFUNCTION(BlueprintNativeEvent, Category = "Dark|Character|Player", DisplayName = "When Falling")
+	UFUNCTION(BlueprintNativeEvent, Category = "Menria|Character|Player", DisplayName = "When Falling")
 	void WhenFalling();
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;

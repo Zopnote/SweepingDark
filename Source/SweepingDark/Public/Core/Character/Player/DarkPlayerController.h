@@ -24,26 +24,26 @@ public:
 	void SetDarkPlayer(ADarkPlayer* Player);
 
 	void SetupInput(UInputComponent* PlayerInputComponent);
-	UFUNCTION(BlueprintCallable, Category = "Dark|Character|Player", DisplayName = "Get Is Stuck In Actor")
+	UFUNCTION(BlueprintCallable, Category = "Menria|Character|Player", DisplayName = "Get Is Stuck In Actor")
 	bool GetIsStuck() const;
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Dark|Character|Player", DisplayName = "Directionality")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Menria|Character|Player", DisplayName = "Directionality")
 	FVector2D Directionality;
 	
-	UFUNCTION(BlueprintCallable, Category = "Dark|Character|Player", DisplayName = "Get Directionality")
+	UFUNCTION(BlueprintCallable, Category = "Menria|Character|Player", DisplayName = "Get Directionality")
 	FVector2D GetDirectionality() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Dark|Character|Player", DisplayName = "Set Directionality")
+	UFUNCTION(BlueprintCallable, Category = "Menria|Character|Player", DisplayName = "Set Directionality")
 	FVector2D SetDirectionality() const;
 	
-	UFUNCTION(BlueprintCallable, Category = "Dark|Character|Player|Controller", DisplayName = "Get Is Holding Move")
+	UFUNCTION(BlueprintCallable, Category = "Menria|Character|Player|Controller", DisplayName = "Get Is Holding Move")
 	bool GetIsHoldingMove() const;
 	
-	UFUNCTION(BlueprintCallable, Category = "Dark|Character|Player|Controller", DisplayName = "Get Is Holding Run")
+	UFUNCTION(BlueprintCallable, Category = "Menria|Character|Player|Controller", DisplayName = "Get Is Holding Run")
 	bool GetIsHoldingRun() const;
 	
 	/*A Ghost hold appear when the player presses two buttons which equalize themself.*/
-	UFUNCTION(BlueprintCallable, Category = "Dark|Character|Player|Controller", DisplayName = "Get Is Ghost Hold")
+	UFUNCTION(BlueprintCallable, Category = "Menria|Character|Player|Controller", DisplayName = "Get Is Ghost Hold")
 	bool GetIsGhostHold() const;
 
 	bool ActiveLocomotion;

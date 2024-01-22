@@ -54,7 +54,6 @@ protected:
 
 	virtual void BeginPlay() override;
 	
-	
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Actor Recognition", Category = "Menria|Character|Controller")
 	void OnActorRecognition(ADarkActor* RecognizedActor);
 	
@@ -62,6 +61,7 @@ protected:
 	void OnCharacterRecognition(ADarkCharacter* RecognizedCharacter);
 	
 	virtual void Tick(float DeltaTime) override;
+	
 private:
 	UFUNCTION(NotBlueprintable)
 	void OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
