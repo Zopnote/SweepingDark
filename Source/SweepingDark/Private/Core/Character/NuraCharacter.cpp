@@ -19,7 +19,7 @@ void ANuraCharacter::BeginPlay()
 }
 
 // Called every frame
-void ANuraCharacter::Tick(float DeltaTime)
+void ANuraCharacter::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }

@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 #pragma once
 
 #include "CoreMinimal.h"
@@ -55,10 +54,17 @@ protected:
 	virtual void BeginPlay() override;
 	
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Actor Recognition", Category = "Menria|Character|Controller")
-	void OnActorRecognition(ADarkActor* RecognizedActor);
+	void BlueprintActorRecognition(ADarkActor* RecognizedActor);
 	
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Character Recognition", Category = "Menria|Character|Controller")
+	void BlueprintCharacterRecognition(ADarkCharacter* RecognizedCharacter);
+
+	UFUNCTION(BlueprintCallable, DisplayName = "On Actor Recognition", Category = "Menria|Character|Controller")
+	void OnActorRecognition(ADarkActor* RecognizedActor);
+	
+	UFUNCTION(BlueprintCallable, DisplayName = "On Character Recognition", Category = "Menria|Character|Controller")
 	void OnCharacterRecognition(ADarkCharacter* RecognizedCharacter);
+
 	
 	virtual void Tick(float DeltaTime) override;
 	

@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 
 #include "Core/Character/DarkCharacter.h"
 
@@ -19,7 +18,7 @@ void ADarkCharacter::BeginPlay()
 }
 
 // Called every frame
-void ADarkCharacter::Tick(float DeltaTime)
+void ADarkCharacter::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }

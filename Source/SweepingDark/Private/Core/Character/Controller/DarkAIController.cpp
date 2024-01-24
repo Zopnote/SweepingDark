@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿
 
 // ReSharper disable CppMemberFunctionMayBeConst
 #include "Core/Character/Controller/DarkAIController.h"
@@ -22,8 +21,10 @@ void ADarkAIController::BeginPlay()
 	
 }
 
-void ADarkAIController::OnActorRecognition_Implementation(ADarkActor* RecognizedActor) {}
-void ADarkAIController::OnCharacterRecognition_Implementation(ADarkCharacter* RecognizedCharacter) {}
+void ADarkAIController::BlueprintActorRecognition_Implementation(ADarkActor* RecognizedActor) {}
+void ADarkAIController::BlueprintCharacterRecognition_Implementation(ADarkCharacter* RecognizedCharacter) {}
+void ADarkAIController::OnActorRecognition(ADarkActor* RecognizedActor) {}
+void ADarkAIController::OnCharacterRecognition(ADarkCharacter* RecognizedCharacter) {}
 
 void ADarkAIController::Tick(const float DeltaTime)
 {
@@ -40,6 +41,7 @@ void ADarkAIController::OnComponentOverlap(UPrimitiveComponent* OverlappedComp, 
 			if (!IsWallBetween(GetWorld()->GetFirstPlayerController(), OtherDarkActor))
 			{
 				OnActorRecognition(OtherDarkActor);
+				BlueprintActorRecognition(OtherDarkActor);
 			}
 		}
 	}
@@ -50,6 +52,7 @@ void ADarkAIController::OnComponentOverlap(UPrimitiveComponent* OverlappedComp, 
 			if (!IsWallBetween(GetWorld()->GetFirstPlayerController(), OtherCharacter))
 			{
 				OnCharacterRecognition(OtherCharacter);
+				BlueprintCharacterRecognition(OtherCharacter);
 			}
 		}
 	}
