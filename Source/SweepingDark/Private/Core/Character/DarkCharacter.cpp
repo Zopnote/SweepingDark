@@ -2,11 +2,13 @@
 
 #include "Core/Character/DarkCharacter.h"
 
+#include "PaperFlipbookComponent.h"
+
 
 // Sets default values
 ADarkCharacter::ADarkCharacter()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	
 	PrimaryActorTick.bCanEverTick = true;
 }
 

@@ -12,10 +12,10 @@ UCLASS()
 class SWEEPINGDARK_API ADarkAIController : public AAIController
 {
 	GENERATED_BODY()
-
+	
 public:
 	ADarkAIController();
-
+	
 protected:
 	
 	UPROPERTY(EditAnywhere, DisplayName = "Perception Radius", Category = "Menria|Character|Controller")
@@ -41,16 +41,16 @@ protected:
 	
 	UPROPERTY(EditAnywhere, DisplayName = "Sedentary Movement Radius", Category = "Menria|Character|Controller")
 	float SedentaryMovementRadius; // The radius around the Settlement where the character walk when Sedentary on is.
-
+	
 	UPROPERTY(Transient, DisplayName = "Controlled Character Instance")
 	ADarkCharacter* ControlledCharacter;
 	
 	UPROPERTY(VisibleAnywhere, DisplayName = "Recognition Sphere", Category = "Menria|Character|Controller")
 	USphereComponent* RecognitionSphere;
-
+	
 	UFUNCTION(DisplayName = "Is Wall Between", Blueprintable)
 	bool IsWallBetween(AController* Controller, AActor* OtherActor) const;
-
+	
 	virtual void BeginPlay() override;
 	
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Actor Recognition", Category = "Menria|Character|Controller")
@@ -58,13 +58,12 @@ protected:
 	
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "On Character Recognition", Category = "Menria|Character|Controller")
 	void BlueprintCharacterRecognition(ADarkCharacter* RecognizedCharacter);
-
+	
 	UFUNCTION(BlueprintCallable, DisplayName = "On Actor Recognition", Category = "Menria|Character|Controller")
 	void OnActorRecognition(ADarkActor* RecognizedActor);
 	
 	UFUNCTION(BlueprintCallable, DisplayName = "On Character Recognition", Category = "Menria|Character|Controller")
 	void OnCharacterRecognition(ADarkCharacter* RecognizedCharacter);
-
 	
 	virtual void Tick(float DeltaTime) override;
 	
@@ -73,5 +72,5 @@ private:
 	void OnComponentOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 					   int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
-
+	
 };

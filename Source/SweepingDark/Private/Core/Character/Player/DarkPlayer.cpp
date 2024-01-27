@@ -11,6 +11,8 @@ ADarkPlayer::ADarkPlayer()
 {
 	Falling = false;
 	AttackAble = true;
+	WalkingSpeed = 350.0f;
+	RunningSpeed = 700.0f;
 	UCharacterMovementComponent* Movement = GetCharacterMovement();
 	Movement->MaxWalkSpeed = WalkingSpeed;
 	PlayerController = CreateDefaultSubobject<ADarkPlayerController>(TEXT("PlayerController"));

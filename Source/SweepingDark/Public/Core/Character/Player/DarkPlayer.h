@@ -25,10 +25,6 @@ public:
 	virtual void Landed(const FHitResult& Hit) override;
 	
 	bool Falling;
-	
-	float WalkingSpeed = 350.0f;
-
-	float RunningSpeed = 700.0f;
 
 	UPROPERTY(VisibleAnywhere, DisplayName = "Camera Settings", Category = "Menria|Character|Player")
 	UDarkCamera* CameraSettings;
