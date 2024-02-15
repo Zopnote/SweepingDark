@@ -8,6 +8,7 @@
 #include "Core/Character/Animation/DarkCharacterAnimator.h"
 #include "Core/Character/Animation/DarkCharacterChase.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void ADarkCharacter::PostInitializeComponents()
@@ -120,7 +121,20 @@ void ADarkCharacter::BeginPlay()
 	AnimationComponent->SetCharacter(this);
 }
 
-void ADarkCharacter::WhenDirectionalityChanged(FVector2D OldDirection, FVector2D NewDirection) {}
+void ADarkCharacter::WhenDirectionalityChanged(FVector2D OldDirection, FVector2D NewDirection)
+{
+	bool Valid = false;
+	const UClass* CharacterAnimationComponentClass = CharacterAnimationComponent.Get();
+	UDarkCharacterAnimator* AnimationComponent = nullptr;
+	if (CharacterAnimationComponentClass)
+	{
+		AnimationComponent = Cast<UDarkCharacterAnimator>(CharacterAnimationComponentClass->GetDefaultObject());
+		if (AnimationComponent) { Valid = true; }
+		
+	}
+	if (!Valid) { return; }
+	AnimationComponent->ActorDirectionalityChange(NewDirection);
+}
 
 void ADarkCharacter::WhenScalarDegreeChanged(const float Degree, const bool RightAxisValue)
 {
@@ -136,12 +150,12 @@ void ADarkCharacter::WhenScalarDegreeChanged(const float Degree, const bool Righ
 	if (!Valid) { return; }
 	
 	const FString String = FString::SanitizeFloat(Degree);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT(""+String));
 
 	
 	if (Degree<45 && 0<Degree)
 	{
 		AnimationComponent->MultipleActorVectorsChange(Front);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Front: "+String));
 		Sprite->SetRelativeRotation(FRotator(0.0f, -90, 0.0f));
 		InversedSprite->SetRelativeRotation(FRotator(0.0f, -270, 0.0f));
 		return;
@@ -153,11 +167,13 @@ void ADarkCharacter::WhenScalarDegreeChanged(const float Degree, const bool Righ
 		if (RightAxisValue)
 		{
 		AnimationComponent->MultipleActorVectorsChange(Right);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Right: "+String));
 			Sprite->SetRelativeRotation(FRotator(0.0f, -180, 0.0f));
 			InversedSprite->SetRelativeRotation(FRotator(0.0f, 0, 0.0f));
 			return;
 		}
 		AnimationComponent->MultipleActorVectorsChange(Left);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Left: "+String));
 		Sprite->SetRelativeRotation(FRotator(0.0f, 0, 0.0f));
 		InversedSprite->SetRelativeRotation(FRotator(0.0f, -180, 0.0f));
 		return;
@@ -167,6 +183,7 @@ void ADarkCharacter::WhenScalarDegreeChanged(const float Degree, const bool Righ
 	if (Degree<180 && 135<Degree)
 	{
 		AnimationComponent->MultipleActorVectorsChange(Back);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Back: "+String));
 		Sprite->SetRelativeRotation(FRotator(0.0f, -270, 0.0f));
 		InversedSprite->SetRelativeRotation(FRotator(0.0f, -90, 0.0f));
 		return;
@@ -177,13 +194,12 @@ void ADarkCharacter::WhenScalarDegreeChanged(const float Degree, const bool Righ
 
 void ADarkCharacter::Tick(const float DeltaSeconds)
 {
-	CharacterAnimationComponent.GetDefaultObject()->Tick(DeltaSeconds);
 	Super::Tick(DeltaSeconds);
 	//TODO: Change later to make multiplayer works 
-	if (const APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+	if (APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0))
 		{
 		// Setup and save vectors for calculations
-			const FVector OtherActor = PlayerController->GetPawn()->GetActorLocation();
+			const FVector OtherActor = CameraManager->GetCameraLocation();
 			const FVector FirstVector = GetActorForwardVector();
 			FVector SecondVector = FVector(OtherActor.X-GetActorLocation().X, OtherActor.Y-GetActorLocation().Y, OtherActor.Z-GetActorLocation().Z);
 			SecondVector.Normalize(0.0001);

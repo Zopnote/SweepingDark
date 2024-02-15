@@ -21,46 +21,37 @@ void UDarkCharacterAnimator::SetCharacter(ADarkCharacter* NewCharacter)
 	Character = NewCharacter;
 }
 
-void UDarkCharacterAnimator::SetSprite(UPaperFlipbookComponent* PaperFlipbookComponent,
-	UDarkAnimationState* AnimationState)
-{
-	if (GetCurrentCharacterChase() == Front)
-	{
-		PaperFlipbookComponent->SetFlipbook(AnimationState->Front);
-		return;
-	}
-	if (GetCurrentCharacterChase() == Back)
-	{
-		PaperFlipbookComponent->SetFlipbook(AnimationState->Back);
-		return;
-	}
-	if (GetCurrentCharacterChase() == Left)
-	{
-		PaperFlipbookComponent->SetFlipbook(AnimationState->Left);
-		return;
-	}
-	if (GetCurrentCharacterChase() == Right)
-	{
-		PaperFlipbookComponent->SetFlipbook(AnimationState->Right);
-		return;
-	}
-}
+
 
 ADarkCharacter* UDarkCharacterAnimator::GetCharacter() const
 {
 	return Character;
 }
 
-void UDarkCharacterAnimator::SetAnimationState(UDarkAnimationState* NewAnimationState, EDarkCharacterChase NewCharacterChase)
+void UDarkCharacterAnimator::SetAnimationState(UDarkAnimationState* NewAnimationState)
 {
-	if (CurrentAnimationState == NewAnimationState->Name && CurrentCharacterChase == NewCharacterChase)
-	{
-		return;
-	}
 	WhenAnimationStateChange(GetAnimationState(CurrentAnimationState), NewAnimationState);
 	CurrentAnimationState = NewAnimationState->Name;
-	SetSprite(Character->Sprite, NewAnimationState);
-	//SetSprite(Character->InversedSprite, NewAnimationState);
+	if (CurrentCharacterChase == Front)
+	{
+		GetCharacter()->Sprite->SetFlipbook(GetAnimationState("Walk")->Front);
+		return;
+	}
+	if (CurrentCharacterChase == Back)
+	{
+		GetCharacter()->Sprite->SetFlipbook(GetAnimationState("Walk")->Back);
+		return;
+	}
+	if (CurrentCharacterChase == Right)
+	{
+		GetCharacter()->Sprite->SetFlipbook(GetAnimationState("Walk")->Right);
+		return;
+	}
+	if (CurrentCharacterChase == Left)
+	{
+		GetCharacter()->Sprite->SetFlipbook(GetAnimationState("Walk")->Left);
+		return;
+	}
 }
 
 void UDarkCharacterAnimator::WhenAnimationStateChange(UDarkAnimationState* OldAnimationState,
@@ -83,20 +74,15 @@ UDarkAnimationState* UDarkCharacterAnimator::GetAnimationState(const FString& Na
 
 
 
-void UDarkCharacterAnimator::Tick(float DelthaSeconds)
-{
-	
-}
-
 void UDarkCharacterAnimator::MultipleActorVectorsChange(const EDarkCharacterChase CharacterChase)
 {
-	SetAnimationState(GetAnimationState("Walk"), CharacterChase);
 	SetCurrentCharacterChase(CharacterChase);
+	SetAnimationState(GetAnimationState("Walk"));
 }
 
 
 void UDarkCharacterAnimator::ActorDirectionalityChange(FVector2D AxisValue)
 {
-	
+	SetAnimationState(GetAnimationState("Walk"));
 }
 

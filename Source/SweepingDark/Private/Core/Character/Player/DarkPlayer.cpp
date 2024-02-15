@@ -88,7 +88,6 @@ void ADarkPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ADarkPlayer::Tick(const float DeltaSeconds)
 {
-	PlayerAnimationComponent->Tick(DeltaSeconds);
 	if (!Falling)
 	{
 		if (GetVelocity().Z < 0)

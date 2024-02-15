@@ -21,7 +21,7 @@ protected:
 	
 private:
 	UPROPERTY(Transient)
-	int CurrentCharacterChase;
+	TEnumAsByte<EDarkCharacterChase> CurrentCharacterChase;
 	
 public:
 
@@ -35,14 +35,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetCharacter(ADarkCharacter* NewCharacter);
 
-	UFUNCTION(BlueprintCallable)
-	void SetSprite(UPaperFlipbookComponent* PaperFlipbookComponent, UDarkAnimationState* AnimationState);
 	
 	UFUNCTION(BlueprintCallable)
 	ADarkCharacter* GetCharacter() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetAnimationState(UDarkAnimationState* NewAnimationState, EDarkCharacterChase NewCharacterChase);
+	void SetAnimationState(UDarkAnimationState* NewAnimationState);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void WhenAnimationStateChange(UDarkAnimationState* OldAnimationState, UDarkAnimationState* NewAnimationState);
@@ -53,8 +51,6 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName = "Get Animation State")
 	UDarkAnimationState* GetAnimationState(const FString& Name);
 
-	UFUNCTION(BlueprintCallable, DisplayName = "Tick Animation")
-	void Tick(float DeltaSeconds);
 
 	void MultipleActorVectorsChange(EDarkCharacterChase CharacterChase);
 	
