@@ -8,7 +8,7 @@ public class SweepingDark : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "PaperZD", "EnhancedInput", "AIModule" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "PaperZD", "EnhancedInput", "AIModule", "Paper2D"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "EnhancedInput" });
 

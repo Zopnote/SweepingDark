@@ -2,7 +2,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PaperZDCharacter.h"
 #include "Camera/DarkCamera.h"
 #include "Core/Character/DarkCharacter.h"
 
@@ -48,5 +47,22 @@ public:
 	UPROPERTY(EditAnywhere, DisplayName = "Attack Able", Category = "Menria|Character")
 	bool AttackAble;
 
-
+	UPROPERTY(VisibleAnywhere, Category = "Menria|Character|Player", DisplayName = "Helmet Sprite")
+	TObjectPtr<UPaperFlipbookComponent> HelmetSprite;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Menria|Character|Player", DisplayName = "Chest Sprite")
+	TObjectPtr<UPaperFlipbookComponent> ChestSprite;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Menria|Character|Player", DisplayName = "Boots Sprite")
+	TObjectPtr<UPaperFlipbookComponent> BootsSprite;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Menria|Character|Player", DisplayName = "Inversed Helmet Sprite")
+	TObjectPtr<UPaperFlipbookComponent> InversedHelmetSprite;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Menria|Character|Player", DisplayName = "Inversed Chest Sprite")
+	TObjectPtr<UPaperFlipbookComponent> InversedChestSprite;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Menria|Character|Player", DisplayName = "Inversed Boots Sprite")
+	TObjectPtr<UPaperFlipbookComponent> InversedBootsSprite;
+	
 };

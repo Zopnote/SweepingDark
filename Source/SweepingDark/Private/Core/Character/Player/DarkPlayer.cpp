@@ -31,6 +31,34 @@ ADarkPlayer::ADarkPlayer()
 	FollowCamera->bUsePawnControlRotation = false;
 	PlayerController->ActiveLocomotion = true;
 	
+	InversedHelmetSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Inversed Helmet Sprite"));
+	InversedHelmetSprite->SetupAttachment(RootComponent);
+	InversedHelmetSprite->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
+	InversedHelmetSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	
+	InversedChestSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Inversed Chest Sprite"));
+	InversedChestSprite->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
+	InversedChestSprite->SetupAttachment(RootComponent);
+	InversedChestSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+
+	InversedBootsSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Inversed BootsSprite"));
+	InversedBootsSprite->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
+	InversedBootsSprite->SetupAttachment(RootComponent);
+	InversedBootsSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	
+	
+	HelmetSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Helmet Sprite"));
+	HelmetSprite->SetupAttachment(RootComponent);
+	HelmetSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	
+	ChestSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Chest Sprite"));
+	ChestSprite->SetupAttachment(RootComponent);
+	ChestSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	
+	BootsSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Boots Sprite"));
+	BootsSprite->SetupAttachment(RootComponent);
+	BootsSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+	
 }
 
 void ADarkPlayer::Landed(const FHitResult& Hit)

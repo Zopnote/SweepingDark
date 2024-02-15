@@ -28,6 +28,7 @@ void ADarkAIController::OnCharacterRecognition(ADarkCharacter* RecognizedCharact
 
 void ADarkAIController::Tick(const float DeltaTime)
 {
+	
 	Super::Tick(DeltaTime);
 }
 

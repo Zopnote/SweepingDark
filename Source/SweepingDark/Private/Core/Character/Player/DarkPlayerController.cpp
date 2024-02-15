@@ -70,10 +70,10 @@ void ADarkPlayerController::ReleaseD() { HoldingD = false; }
 FVector2D ADarkPlayerController::GetDirectionality() const
 {
 	
-	return Directionality;
+	return DarkPlayer->Directionality;
 }
 
-FVector2D ADarkPlayerController::SetDirectionality() const { return Directionality; }
+FVector2D ADarkPlayerController::SetDirectionality() const { return DarkPlayer->Directionality; }
 
 	/*Check if the player moving against a wall etc.*/
 bool ADarkPlayerController::GetIsStuck() const { return DarkPlayer->GetVelocity().SizeSquared() < FMath::Square(10.0f) && GetIsHoldingMove() && !GetIsGhostHold(); }
@@ -124,7 +124,7 @@ void ADarkPlayerController::Forward(const float AxisValue)
 		/*Get forward vector*/
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		
-		Directionality = FVector2D(0, AxisValue*-1);
+		DarkPlayer->Directionality = FVector2D(0, AxisValue*-1);
 		/*Add movement in that direction*/
 		DarkPlayer->AddMovementInput(Direction, AxisValue);
 	}
@@ -141,7 +141,7 @@ void ADarkPlayerController::Right(const float AxisValue)
 		/*Get right vector*/ 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		
-		Directionality = FVector2D(AxisValue, 0);
+		DarkPlayer->Directionality = FVector2D(AxisValue, 0);
 
 		/*Add movement in that direction*/
 		DarkPlayer->AddMovementInput(Direction, AxisValue);

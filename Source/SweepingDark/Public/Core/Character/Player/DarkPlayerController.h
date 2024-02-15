@@ -26,9 +26,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Menria|Character|Player", DisplayName = "Get Is Stuck In Actor")
 	bool GetIsStuck() const;
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Menria|Character|Player", DisplayName = "Directionality")
-	FVector2D Directionality;
-	
 	UFUNCTION(BlueprintCallable, Category = "Menria|Character|Player", DisplayName = "Get Directionality")
 	FVector2D GetDirectionality() const;
 
