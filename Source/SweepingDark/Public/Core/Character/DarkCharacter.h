@@ -13,7 +13,11 @@ class UDarkCharacterAnimator;
 UCLASS()
 class SWEEPINGDARK_API ADarkCharacter : public ACharacter
 {
+private:
 	GENERATED_BODY()
+	
+	UPROPERTY(Transient)
+	FVector2D Directionality;
 protected:
 	float Health;
 	bool Death;
@@ -26,11 +30,6 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Dark|Character", DisplayName = "Sprite")
-	TObjectPtr<UPaperFlipbookComponent> Sprite;
-	
-	UPROPERTY(VisibleAnywhere, Category = "Dark|Character", DisplayName = "Inversed Sprite")
-	TObjectPtr<UPaperFlipbookComponent> InversedSprite;
 	
 	UPROPERTY(VisibleAnywhere, DisplayName = "Cold Point Collision")
 	USphereComponent* HitColdPoint;
@@ -53,24 +52,30 @@ protected:
 	UPROPERTY(VisibleAnywhere, DisplayName = "Hot Point Right Collision")
 	UCapsuleComponent* HitHotPointBack;
 	
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Dark|Character|Animation", DisplayName = "Animation Component")
-	TObjectPtr<UDarkCharacterAnimator> CharacterAnimationComponent;
+	TSubclassOf<UDarkCharacterAnimator> CharacterAnimationComponent;
 	
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Dark|Character", DisplayName = "Directionality")
-	FVector2D Directionality;
+	UPROPERTY(VisibleAnywhere, Category = "Dark|Character", DisplayName = "Sprite")
+	TObjectPtr<UPaperFlipbookComponent> Sprite;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Dark|Character", DisplayName = "Inversed Sprite")
+	TObjectPtr<UPaperFlipbookComponent> InversedSprite;
+	
 	explicit ADarkCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	float WalkingSpeed;
 	float RunningSpeed;
+
+	UFUNCTION(BlueprintCallable, Category = "Dark|Character", DisplayName = "Set Directionality")
 	bool SetDrectionality(FVector2D NewDirection);
-	FVector2D GetDrectionality();
+	
+	UFUNCTION(BlueprintCallable, Category = "Dark|Character", DisplayName = "Get Directionality")
+	FVector2D GetDrectionality() const;
 	
 protected:
-	// Called when the game starts or when spawned
-	void WhenDirectionalityChanged(FVector2D OldDirection, FVector2D NewDirection);
 	virtual void BeginPlay() override;
+	virtual void WhenDirectionalityChanged(FVector2D OldDirection, FVector2D NewDirection);
+	virtual void WhenScalarDegreeChanged(float Degree, bool RightAxisValue);
 	virtual void Tick(float DeltaSeconds) override;
-public:
 
 };

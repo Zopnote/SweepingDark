@@ -7,6 +7,7 @@
 
 #include "DarkPlayer.generated.h"
 
+class UDarkPlayerAnimator;
 class ADarkPlayerController;
 
 UCLASS()
@@ -16,7 +17,10 @@ class SWEEPINGDARK_API ADarkPlayer : public ADarkCharacter
 	
 	UPROPERTY(VisibleAnywhere, Category = Controller)
 	ADarkPlayerController* PlayerController;
-
+	
+	UPROPERTY(EditAnywhere, Category = "Dark|Character|Player|Animation", DisplayName = "Player Animation Component")
+	UDarkPlayerAnimator* PlayerAnimationComponent;
+	virtual void WhenScalarDegreeChanged(float Degree, bool RightAxisValue) override;
 public:
 	
 	ADarkPlayer();

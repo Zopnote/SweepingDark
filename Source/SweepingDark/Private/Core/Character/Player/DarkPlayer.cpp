@@ -2,13 +2,21 @@
 #include "Core/Character/Player/DarkPlayer.h"
 
 #include "Camera/CameraComponent.h"
+#include "Core/Character/Player/DarkPlayerAnimator.h"
 #include "Core/Character/Player/DarkPlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
 
+void ADarkPlayer::WhenScalarDegreeChanged(float Degree, bool RightAxisValue)
+{
+	Super::WhenScalarDegreeChanged(Degree, RightAxisValue);
+}
+
 ADarkPlayer::ADarkPlayer()
 {
+	PlayerAnimationComponent = CreateDefaultSubobject<UDarkPlayerAnimator>(TEXT("Player Animation Component"));
+	PlayerAnimationComponent->InitializePlayerAnimationComponent(this);
 	Falling = false;
 	AttackAble = true;
 	WalkingSpeed = 350.0f;
@@ -32,31 +40,31 @@ ADarkPlayer::ADarkPlayer()
 	PlayerController->ActiveLocomotion = true;
 	
 	InversedHelmetSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Inversed Helmet Sprite"));
-	InversedHelmetSprite->SetupAttachment(RootComponent);
+	InversedHelmetSprite->SetupAttachment(GetRootComponent());
 	InversedHelmetSprite->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
 	InversedHelmetSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	
 	InversedChestSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Inversed Chest Sprite"));
 	InversedChestSprite->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
-	InversedChestSprite->SetupAttachment(RootComponent);
+	InversedChestSprite->SetupAttachment(GetRootComponent());
 	InversedChestSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 
 	InversedBootsSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Inversed BootsSprite"));
 	InversedBootsSprite->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
-	InversedBootsSprite->SetupAttachment(RootComponent);
+	InversedBootsSprite->SetupAttachment(GetRootComponent());
 	InversedBootsSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	
 	
 	HelmetSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Helmet Sprite"));
-	HelmetSprite->SetupAttachment(RootComponent);
+	HelmetSprite->SetupAttachment(GetRootComponent());
 	HelmetSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	
 	ChestSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Chest Sprite"));
-	ChestSprite->SetupAttachment(RootComponent);
+	ChestSprite->SetupAttachment(GetRootComponent());
 	ChestSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	
 	BootsSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Boots Sprite"));
-	BootsSprite->SetupAttachment(RootComponent);
+	BootsSprite->SetupAttachment(GetRootComponent());
 	BootsSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 	
 }
@@ -80,6 +88,7 @@ void ADarkPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ADarkPlayer::Tick(const float DeltaSeconds)
 {
+	PlayerAnimationComponent->Tick(DeltaSeconds);
 	if (!Falling)
 	{
 		if (GetVelocity().Z < 0)
