@@ -8,35 +8,42 @@
 #include "GameFramework/SpringArmComponent.h"
 
 
-void ADarkPlayer::WhenScalarDegreeChanged(float Degree, bool RightAxisValue)
+void ADarkPlayer::WhenScalarDegreeChanged(const float Degree, const bool RightAxisValue)
 {
 	Super::WhenScalarDegreeChanged(Degree, RightAxisValue);
 }
 
 ADarkPlayer::ADarkPlayer()
 {
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
 	PlayerAnimationComponent = CreateDefaultSubobject<UDarkPlayerAnimator>(TEXT("Player Animation Component"));
 	PlayerAnimationComponent->InitializePlayerAnimationComponent(this);
 	Falling = false;
 	AttackAble = true;
 	WalkingSpeed = 350.0f;
 	RunningSpeed = 700.0f;
+	RightRunningSpeed = 750.0f;
 	UCharacterMovementComponent* Movement = GetCharacterMovement();
 	Movement->MaxWalkSpeed = WalkingSpeed;
 	PlayerController = CreateDefaultSubobject<ADarkPlayerController>(TEXT("PlayerController"));
-	Controller = PlayerController;
 	PlayerController->SetDarkPlayer(this);
+	Controller = PlayerController;
+	UseSpecificSpectrum = false;
 	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 400.0f; 
-	CameraBoom->bUsePawnControlRotation = false;
+	CameraBoom->bUsePawnControlRotation = true;
 	CameraBoom->SetRelativeLocation(FVector(60.0f, 30.0f, 60.0f));
 	CameraBoom->SetRelativeRotation(FRotator(-20.0f, -90.0f, 0.0f));
 	
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 	FollowCamera->bUsePawnControlRotation = false;
+	
 	PlayerController->ActiveLocomotion = true;
 	
 	InversedHelmetSprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Inversed Helmet Sprite"));
@@ -76,7 +83,10 @@ void ADarkPlayer::Landed(const FHitResult& Hit)
 }
 
 
-ADarkPlayerController* ADarkPlayer::GetDarkController() const { return PlayerController; }
+ADarkPlayerController* ADarkPlayer::GetDarkPlayerController() const
+{
+	return PlayerController;
+}
 
 void ADarkPlayer::WhenFalling_Implementation() {}
 
@@ -88,6 +98,7 @@ void ADarkPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ADarkPlayer::Tick(const float DeltaSeconds)
 {
+	PlayerController->Tick(DeltaSeconds);
 	if (!Falling)
 	{
 		if (GetVelocity().Z < 0)

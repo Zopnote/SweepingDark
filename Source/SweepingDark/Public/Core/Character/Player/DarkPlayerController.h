@@ -15,7 +15,13 @@ class SWEEPINGDARK_API ADarkPlayerController : public APlayerController
 	
 	UPROPERTY(Transient)
 	ADarkPlayer* DarkPlayer;
+
+	UPROPERTY(Transient)
+	bool IsPlayerCameraFocused;
 	
+	
+	UPROPERTY(Transient)
+	FTimerHandle DelayTimerHandle;
 public:
 	
 	ADarkPlayerController();
@@ -44,6 +50,7 @@ public:
 
 	bool ActiveLocomotion;
 
+	virtual void Tick(float DeltaSeconds) override;
 private:
 	void Pitch(const float AxisValue);
 	void Yaw(const float AxisValue);
@@ -52,6 +59,8 @@ private:
 	void Right(const float AxisValue);
 		
 	bool HoldingRun;
+	bool IsLerping;
+	float GoalYaw;
 
 protected:
 	void PressJump();

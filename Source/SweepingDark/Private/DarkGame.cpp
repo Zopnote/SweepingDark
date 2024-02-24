@@ -5,7 +5,7 @@
 
 ADarkGame::ADarkGame()
 {
-	static ConstructorHelpers::FClassFinder<ADarkPlayer> DarkPlayerBlueprintClass(TEXT("/Game/Blueprints/Character/Player/DarkPlayer_BP.DarkPlayer_BP_C"));
+	static ConstructorHelpers::FClassFinder<ADarkPlayer> DarkPlayerBlueprintClass(TEXT("/Game/Blueprints/Character/Player/Player.Player_C"));
 	if (DarkPlayerBlueprintClass.Class)
 	{
 		DefaultPawnClass = DarkPlayerBlueprintClass.Class;

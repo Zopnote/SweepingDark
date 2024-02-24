@@ -6,12 +6,12 @@
 #include "Core/Character/DarkCharacter.h"
 #include "Core/Character/Animation/DarkCharacterChase.h"
 
-void UDarkCharacterAnimator::SetCurrentCharacterChase(EDarkCharacterChase CharacterChase)
+void UDarkCharacterAnimator::SetCurrentCharacterChase(const EDarkCharacterChase CharacterChase)
 {
 	CurrentCharacterChase = CharacterChase;
 }
 
-int UDarkCharacterAnimator::GetCurrentCharacterChase()
+int UDarkCharacterAnimator::GetCurrentCharacterChase() const
 {
 	return CurrentCharacterChase;
 }
@@ -30,35 +30,34 @@ ADarkCharacter* UDarkCharacterAnimator::GetCharacter() const
 
 void UDarkCharacterAnimator::SetAnimationState(UDarkAnimationState* NewAnimationState)
 {
-	WhenAnimationStateChange(GetAnimationState(CurrentAnimationState), NewAnimationState);
+	if (NewAnimationState == nullptr)
+	{
+		return;
+	}
 	CurrentAnimationState = NewAnimationState->Name;
 	if (CurrentCharacterChase == Front)
 	{
-		GetCharacter()->Sprite->SetFlipbook(GetAnimationState("Walk")->Front);
+		GetCharacter()->Sprite->SetFlipbook(NewAnimationState->Front);
 		return;
 	}
 	if (CurrentCharacterChase == Back)
 	{
-		GetCharacter()->Sprite->SetFlipbook(GetAnimationState("Walk")->Back);
+		GetCharacter()->Sprite->SetFlipbook(NewAnimationState->Back);
 		return;
 	}
 	if (CurrentCharacterChase == Right)
 	{
-		GetCharacter()->Sprite->SetFlipbook(GetAnimationState("Walk")->Right);
+		GetCharacter()->Sprite->SetFlipbook(NewAnimationState->Right);
 		return;
 	}
 	if (CurrentCharacterChase == Left)
 	{
-		GetCharacter()->Sprite->SetFlipbook(GetAnimationState("Walk")->Left);
+		GetCharacter()->Sprite->SetFlipbook(NewAnimationState->Left);
 		return;
 	}
 }
 
-void UDarkCharacterAnimator::WhenAnimationStateChange(UDarkAnimationState* OldAnimationState,
-	UDarkAnimationState* NewAnimationState)
-{
-	
-}
+
 
 UDarkAnimationState* UDarkCharacterAnimator::GetAnimationState(const FString& Name)
 {
@@ -72,17 +71,44 @@ UDarkAnimationState* UDarkCharacterAnimator::GetAnimationState(const FString& Na
 	return nullptr;
 }
 
+void UDarkCharacterAnimator::RefreshAnimationDirectionality()
+{
+	if (CurrentCharacterChase == Front)
+	{
+		GetCharacter()->Sprite->SetFlipbook(GetAnimationState(CurrentAnimationState)->Front);
+		return;
+	}
+	if (CurrentCharacterChase == Back)
+	{
+		GetCharacter()->Sprite->SetFlipbook(GetAnimationState(CurrentAnimationState)->Back);
+		return;
+	}
+	if (CurrentCharacterChase == Right)
+	{
+		GetCharacter()->Sprite->SetFlipbook(GetAnimationState(CurrentAnimationState)->Right);
+		return;
+	}
+	if (CurrentCharacterChase == Left)
+	{
+		GetCharacter()->Sprite->SetFlipbook(GetAnimationState(CurrentAnimationState)->Left);
+		return;
+	}
+}
 
 
-void UDarkCharacterAnimator::MultipleActorVectorsChange(const EDarkCharacterChase CharacterChase)
+void UDarkCharacterAnimator::DirectionalRelativeCameraChange(const EDarkCharacterChase CharacterChase)
 {
 	SetCurrentCharacterChase(CharacterChase);
-	SetAnimationState(GetAnimationState("Walk"));
+	RefreshAnimationDirectionality();
 }
 
 
 void UDarkCharacterAnimator::ActorDirectionalityChange(FVector2D AxisValue)
 {
-	SetAnimationState(GetAnimationState("Walk"));
+	
+}
+
+void UDarkCharacterAnimator::Tick(const float Delta)
+{
 }
 

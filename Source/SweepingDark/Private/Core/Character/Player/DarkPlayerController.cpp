@@ -1,6 +1,11 @@
 ﻿
 // ReSharper disable CppMemberFunctionMayBeConst
 #include "SweepingDark/Public/Core/Character/Player/DarkPlayerController.h"
+
+#include <chrono>
+#include <thread>
+
+#include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "Core/Character/Player/DarkPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -8,10 +13,7 @@
 
 
 
-ADarkPlayerController::ADarkPlayerController()
-{
-	
-}
+ADarkPlayerController::ADarkPlayerController(): DarkPlayer(nullptr), IsPlayerCameraFocused(false), ActiveLocomotion(false), HoldingRun(false), IsLerping(false), GoalYaw(0), HoldingW(false), HoldingA(false), HoldingS(false), HoldingD(false) { }
 
 void ADarkPlayerController::SetDarkPlayer(ADarkPlayer* PlayerInstance)
 {
@@ -56,12 +58,25 @@ void ADarkPlayerController::SetupInput(UInputComponent* PlayerInputComponent)
 		UE_LOG(LogTemp, Error, TEXT("Player character binding was executed with errors"));
 	}
 }
-void ADarkPlayerController::PressW() { HoldingW = true; }
-void ADarkPlayerController::ReleaseW() { HoldingW = false; }
+void ADarkPlayerController::PressW()
+{
+	HoldingW = true;
+}
+void ADarkPlayerController::ReleaseW()
+{
+	HoldingW = false;
+	IsPlayerCameraFocused = false;
+	IsLerping = false;
+}
 void ADarkPlayerController::PressA() { HoldingA = true; }
 void ADarkPlayerController::ReleaseA() { HoldingA = false; }
 void ADarkPlayerController::PressS() { HoldingS = true; }
-void ADarkPlayerController::ReleaseS() { HoldingS = false; }
+void ADarkPlayerController::ReleaseS()
+{
+	HoldingS = false;
+	IsPlayerCameraFocused = false;
+	IsLerping = false;
+}
 void ADarkPlayerController::PressD() { HoldingD = true; }
 void ADarkPlayerController::ReleaseD() { HoldingD = false; }
 
@@ -87,8 +102,22 @@ bool ADarkPlayerController::GetIsHoldingRun() const { return HoldingRun; }
 bool ADarkPlayerController::GetIsGhostHold() const { return (HoldingA && HoldingD || HoldingW && HoldingS); }
 
 
+void ADarkPlayerController::Tick(const float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (IsLerping)
+	{
+		if (FMath::IsNearlyEqual(DarkPlayer->GetActorRotation().Yaw, GoalYaw, 2.0))
+		{
+			if (HoldingW || HoldingS)
+			{
+				IsPlayerCameraFocused = true;
+				IsLerping = !IsLerping;
+			}
+		}
+	}
+}
 
-	
 void ADarkPlayerController::PressJump()
 {
 	DarkPlayer->Jump();
@@ -101,6 +130,17 @@ void ADarkPlayerController::ReleaseJump()
 
 void ADarkPlayerController::PressRun() 
 {
+	if (HoldingS)
+	{
+		return;
+	}
+	if (HoldingA || HoldingD)
+	{
+		UCharacterMovementComponent* Movement = DarkPlayer->GetCharacterMovement();
+		Movement->MaxWalkSpeed = DarkPlayer->RightRunningSpeed;
+		HoldingRun = true;
+		return;
+	}
 	UCharacterMovementComponent* Movement = DarkPlayer->GetCharacterMovement();
 	Movement->MaxWalkSpeed = DarkPlayer->RunningSpeed;
 	HoldingRun = true;
@@ -113,59 +153,84 @@ void ADarkPlayerController::ReleaseRun()
 	HoldingRun = false;
 }
 
-void ADarkPlayerController::Forward(const float AxisValue)
-{
-	if (AxisValue != 0.0f)
-	{
-		/*Find out which direction is right*/
-		const FRotator Rotation = DarkPlayer->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		/*Get forward vector*/
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		
-		DarkPlayer->SetDrectionality(FVector2D(0, AxisValue*-1));
-		/*Add movement in that direction*/
-		DarkPlayer->AddMovementInput(Direction, AxisValue);
-	}
-}
-
 void ADarkPlayerController::Right(const float AxisValue)
 {
 	if (AxisValue != 0.0f)
 	{
-		/*Find out which direction is right*/
-		const FRotator Rotation = DarkPlayer->GetControlRotation();
+		if (HoldingW && IsPlayerCameraFocused)
+		{
+			const FRotator NewRotation = FRotationMatrix::MakeFromX(DarkPlayer->FollowCamera->GetForwardVector()).Rotator();
+			const FRotator Rotation = NewRotation;
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
+			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+			DarkPlayer->SetDrectionality(FVector2D(0, AxisValue*-1));
+			DarkPlayer->AddMovementInput(Direction, AxisValue);
+			return;
+		}
+		const FRotator NewRotation = FRotationMatrix::MakeFromX(DarkPlayer->FollowCamera->GetForwardVector()).Rotator();
+		const float DeltaTime = GetWorld()->GetDeltaSeconds();
+		float LerpAlpha = FMath::Clamp(10 * DeltaTime, 0.0f, 1.0f);
+		FRotator LerpedRotation = FMath::Lerp(DarkPlayer->GetActorRotation(), NewRotation, LerpAlpha);
+		DarkPlayer->SetActorRotation(FRotator(0.0f, LerpedRotation.Yaw, 0.0f));
+		
+		const FRotator Rotation = NewRotation;
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		/*Get right vector*/ 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		
-		DarkPlayer->SetDrectionality(FVector2D(AxisValue, 0));
-
-		/*Add movement in that direction*/
+		DarkPlayer->SetDrectionality(FVector2D(0, AxisValue*-1));
 		DarkPlayer->AddMovementInput(Direction, AxisValue);
 	}
 }
 
+
+void ADarkPlayerController::Forward(const float AxisValue)
+{
+	if (AxisValue != 0.0f)
+	{
+		if ((HoldingW || HoldingS) && IsPlayerCameraFocused)
+		{
+			const FRotator NewRotation = FRotationMatrix::MakeFromX(DarkPlayer->FollowCamera->GetForwardVector()).Rotator();
+			DarkPlayer->SetActorRotation(FRotator(0.0f, NewRotation.Yaw, 0.0f));
+			
+			const FRotator YawRotation(0, NewRotation.Yaw, 0);
+			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+			DarkPlayer->SetDrectionality(FVector2D(AxisValue, 0));
+			DarkPlayer->AddMovementInput(Direction, -1*AxisValue);
+			return;
+		}
+		
+		const FRotator NewRotation = FRotationMatrix::MakeFromX(DarkPlayer->FollowCamera->GetForwardVector()).Rotator();
+		const float DeltaTime = GetWorld()->GetDeltaSeconds();
+		float LerpAlpha = FMath::Clamp(14 * DeltaTime, 0.0f, 1.0f);
+		FRotator LerpedRotation = FMath::Lerp(DarkPlayer->GetActorRotation(), NewRotation, LerpAlpha);
+		DarkPlayer->SetActorRotation(FRotator(0.0f, LerpedRotation.Yaw, 0.0f));
+		
+		GoalYaw = NewRotation.Yaw;
+		IsLerping = true;
+		
+		const FRotator YawRotation(0, NewRotation.Yaw, 0);
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		
+		DarkPlayer->SetDrectionality(FVector2D(AxisValue, 0));
+		DarkPlayer->AddMovementInput(Direction, -1*AxisValue);
+	}
+}
+
+
+
 void ADarkPlayerController::Pitch(const float AxisValue)
 {
-	
-	if (!ActiveLocomotion)
+	if (DarkPlayer->RealtiveCameraHeight > 0.75 && AxisValue > 0)
 	{
 		return;
 	}
-	const FRotator Old = DarkPlayer->CameraBoom->GetRelativeRotation();
-	DarkPlayer->CameraBoom->SetRelativeRotation(FRotator(Old.Pitch+AxisValue, Old.Yaw, Old.Roll));
-	
+	DarkPlayer->AddControllerPitchInput(AxisValue);
 }
 
 void ADarkPlayerController::Yaw(const float AxisValue)
 {
-	if (!ActiveLocomotion)
-	{
-		return;
-	}
+	if (!ActiveLocomotion) { return; }
 	DarkPlayer->AddControllerYawInput(AxisValue);
 }
 

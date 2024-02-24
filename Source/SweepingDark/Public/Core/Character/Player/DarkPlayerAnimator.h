@@ -13,10 +13,10 @@ UCLASS(Blueprintable)
 class SWEEPINGDARK_API UDarkPlayerAnimator : public UDarkCharacterAnimator
 {
 	GENERATED_BODY()
-private:
+	
+public:
 	UPROPERTY(Transient)
 	ADarkPlayer* DarkPlayer;
-public:
-	
-	void InitializePlayerAnimationComponent(ADarkPlayer* DarkPlayer);
+	void InitializePlayerAnimationComponent(ADarkPlayer* InitDarkPlayer);
+	virtual void Tick(const float Delta) override;
 };

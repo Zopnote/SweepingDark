@@ -38,8 +38,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 	
-	UFUNCTION(BlueprintCallable, DisplayName = "Get Controller", Category = "Menria|Character|Player")
-	ADarkPlayerController* GetDarkController() const;
+	UFUNCTION(BlueprintCallable, DisplayName = "Get Player Controller", Category = "Menria|Character|Player")
+	ADarkPlayerController* GetDarkPlayerController() const;
 	
 	UFUNCTION(BlueprintNativeEvent, Category = "Menria|Character|Player", DisplayName = "When Falling")
 	void WhenFalling();

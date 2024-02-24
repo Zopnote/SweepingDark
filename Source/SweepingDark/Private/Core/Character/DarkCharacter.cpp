@@ -121,7 +121,7 @@ void ADarkCharacter::BeginPlay()
 	AnimationComponent->SetCharacter(this);
 }
 
-void ADarkCharacter::WhenDirectionalityChanged(FVector2D OldDirection, FVector2D NewDirection)
+void ADarkCharacter::WhenDirectionalityChanged(FVector2D OldDirection, const FVector2D NewDirection)
 {
 	bool Valid = false;
 	const UClass* CharacterAnimationComponentClass = CharacterAnimationComponent.Get();
@@ -138,6 +138,66 @@ void ADarkCharacter::WhenDirectionalityChanged(FVector2D OldDirection, FVector2D
 
 void ADarkCharacter::WhenScalarDegreeChanged(const float Degree, const bool RightAxisValue)
 {
+	FSpectrum FrontSpec;
+	FSpectrum RightLeftSpec;
+	FSpectrum BackSpec;
+	bool Set = false;
+	if (UseSpecificSpectrum && !Set)
+	{
+		FrontSpec.Start = SpecificSpectrumFront.Start;
+		FrontSpec.End = SpecificSpectrumFront.End;
+		RightLeftSpec.Start = SpecificSpectrumRightLeft.Start;
+		RightLeftSpec.End = SpecificSpectrumRightLeft.End;
+		BackSpec.Start = SpecificSpectrumBack.Start;
+		BackSpec.End = SpecificSpectrumBack.End;
+		Set = !Set;
+	}
+	if (RealtiveCameraHeight > 0.9)
+	{
+		return;
+	}
+	if (RealtiveCameraHeight > 0.7 && !Set)
+	{
+		FrontSpec.Start = 0;
+		FrontSpec.End = 70;
+		RightLeftSpec.Start = 70;
+		RightLeftSpec.End = 120;
+		BackSpec.Start = 120;
+		BackSpec.End = 180;
+		Set = !Set;
+	}
+	if (RealtiveCameraHeight > 0.5 && !Set)
+	{
+		FrontSpec.Start = 0;
+		FrontSpec.End = 58;
+		RightLeftSpec.Start = 58;
+		RightLeftSpec.End = 120;
+		BackSpec.Start = 120;
+		BackSpec.End = 180;
+		Set = !Set;
+	}
+	if (RealtiveCameraHeight > 0.45 && !Set)
+	{
+		FrontSpec.Start = 0;
+		FrontSpec.End = 55;
+		RightLeftSpec.Start = 55;
+		RightLeftSpec.End = 120;
+		BackSpec.Start = 120;
+		BackSpec.End = 180;
+		Set = !Set;
+	}
+	if (!Set)
+	{
+		FrontSpec.Start = 0;
+		FrontSpec.End = 55;
+		RightLeftSpec.Start = 55;
+		RightLeftSpec.End = 128;
+		BackSpec.Start = 128;
+		BackSpec.End = 180;
+		Set = !Set;
+	}
+	
+	
 	bool Valid = false;
 	const UClass* CharacterAnimationComponentClass = CharacterAnimationComponent.Get();
 	UDarkCharacterAnimator* AnimationComponent = nullptr;
@@ -152,38 +212,34 @@ void ADarkCharacter::WhenScalarDegreeChanged(const float Degree, const bool Righ
 	const FString String = FString::SanitizeFloat(Degree);
 
 	
-	if (Degree<45 && 0<Degree)
+	if (FrontSpec.Start<Degree && Degree<FrontSpec.End)
 	{
-		AnimationComponent->MultipleActorVectorsChange(Front);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Front: "+String));
+		AnimationComponent->DirectionalRelativeCameraChange(Front);
 		Sprite->SetRelativeRotation(FRotator(0.0f, -90, 0.0f));
 		InversedSprite->SetRelativeRotation(FRotator(0.0f, -270, 0.0f));
 		return;
 	}
 
 	
-	if (Degree<135 && 45<Degree)
+	if ( RightLeftSpec.Start<Degree && Degree<RightLeftSpec.End)
 	{
 		if (RightAxisValue)
 		{
-		AnimationComponent->MultipleActorVectorsChange(Right);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Right: "+String));
+		AnimationComponent->DirectionalRelativeCameraChange(Right);
 			Sprite->SetRelativeRotation(FRotator(0.0f, -180, 0.0f));
 			InversedSprite->SetRelativeRotation(FRotator(0.0f, 0, 0.0f));
 			return;
 		}
-		AnimationComponent->MultipleActorVectorsChange(Left);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Left: "+String));
+		AnimationComponent->DirectionalRelativeCameraChange(Left);
 		Sprite->SetRelativeRotation(FRotator(0.0f, 0, 0.0f));
 		InversedSprite->SetRelativeRotation(FRotator(0.0f, -180, 0.0f));
 		return;
 	}
 
 	
-	if (Degree<180 && 135<Degree)
+	if (BackSpec.Start<Degree && Degree<BackSpec.End)
 	{
-		AnimationComponent->MultipleActorVectorsChange(Back);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Back: "+String));
+		AnimationComponent->DirectionalRelativeCameraChange(Back);
 		Sprite->SetRelativeRotation(FRotator(0.0f, -270, 0.0f));
 		InversedSprite->SetRelativeRotation(FRotator(0.0f, -90, 0.0f));
 		return;
@@ -195,8 +251,12 @@ void ADarkCharacter::WhenScalarDegreeChanged(const float Degree, const bool Righ
 void ADarkCharacter::Tick(const float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	if (CharacterAnimationComponent)
+	{
+		CharacterAnimationComponent->GetDefaultObject<UDarkCharacterAnimator>()->Tick(DeltaSeconds);
+	}
 	//TODO: Change later to make multiplayer works 
-	if (APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0))
+	if (const APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0))
 		{
 		// Setup and save vectors for calculations
 			const FVector OtherActor = CameraManager->GetCameraLocation();
@@ -213,5 +273,14 @@ void ADarkCharacter::Tick(const float DeltaSeconds)
 			const bool SideSwitch = RightScalarProduct<0;
 			WhenScalarDegreeChanged(ArcCosineInDegrees, SideSwitch);
 		}
+	if (const APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0))
+	{
+		const FVector OtherActor = CameraManager->GetCameraLocation();
+		FVector SecondVector = OtherActor - GetActorLocation();
+		SecondVector = GetTransform().InverseTransformVectorNoScale(SecondVector);
+		SecondVector.Normalize(0.0001);
+		RealtiveCameraHeight = SecondVector.Z;
+		
+	}
 }
 

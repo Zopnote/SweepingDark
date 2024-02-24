@@ -56,6 +56,11 @@ protected:
 	TSubclassOf<UDarkCharacterAnimator> CharacterAnimationComponent;
 	
 public:
+	struct FSpectrum
+	{
+		float Start;
+		float End;
+	};
 	UPROPERTY(VisibleAnywhere, Category = "Dark|Character", DisplayName = "Sprite")
 	TObjectPtr<UPaperFlipbookComponent> Sprite;
 	
@@ -65,6 +70,8 @@ public:
 	explicit ADarkCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	float WalkingSpeed;
 	float RunningSpeed;
+	float RightRunningSpeed;
+	float RealtiveCameraHeight;
 
 	UFUNCTION(BlueprintCallable, Category = "Dark|Character", DisplayName = "Set Directionality")
 	bool SetDrectionality(FVector2D NewDirection);
@@ -73,6 +80,10 @@ public:
 	FVector2D GetDrectionality() const;
 	
 protected:
+	bool UseSpecificSpectrum;
+	FSpectrum SpecificSpectrumRightLeft;
+	FSpectrum SpecificSpectrumBack;
+	FSpectrum SpecificSpectrumFront;
 	virtual void BeginPlay() override;
 	virtual void WhenDirectionalityChanged(FVector2D OldDirection, FVector2D NewDirection);
 	virtual void WhenScalarDegreeChanged(float Degree, bool RightAxisValue);
